@@ -11,10 +11,24 @@ Vue.config.productionTip = false
 var data = []
 var getAndLoadDict = function (url) {
   axios.get(url).then((response) => {
-    response.data.entries.map((x) => { data.push(x) })
+    response.data.entries.map((x) => {
+      x.contentmine = x.identifiers.contentmine
+      x.wikidata = x.identifiers.wikidata
+      data.push(x)
+    })
     // data.push(response.data.entries[0])
   })
 }
+
+Vue.component('wikidata', {
+  props: ['data'],
+  template: '<a v-bind:href="wUrl">{{data.wikidata}}</a>',
+  computed: {
+    wUrl () {
+      return 'https://wikidata.org/wiki/' + this.data.wikidata
+    }
+  }
+})
 
 Vue.use(ClientTable)
 /* eslint-disable no-new */
@@ -24,9 +38,12 @@ new Vue({
     showDictSelector: () => {
       return true
     },
-    columns: ['term', 'name'],
+    columns: ['term', 'name', 'contentmine', 'wikidata'],
     tableData: data,
     options: {
+      templates: {
+        wikidata: 'wikidata'
+      },
       customFilters: [{
         name: 'prefix',
         callback: (row, query) => {
