@@ -21,7 +21,9 @@ Vue.use(ClientTable)
 new Vue({
   el: '#app',
   data: {
-    loaded: true,
+    showDictSelector: () => {
+      return true
+    },
     columns: ['term', 'name'],
     tableData: data,
     options: {
@@ -41,11 +43,11 @@ new Vue({
     prefixes: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
   },
   methods: {
-    dictLoad: (dict) => {
+    dictLoad (dict) {
       getAndLoadDict(dict.url)
-      this.loaded = false
+      this.showDictSelector = false
     },
-    prefixFilter: (prefix) => {
+    prefixFilter (prefix) {
       Event.$emit('vue-tables.filter::prefix', prefix)
     }
   }
