@@ -38,7 +38,7 @@ new Vue({
     showDictSelector: () => {
       return true
     },
-    columns: ['term', 'name', 'contentmine', 'wikidata'],
+    columns: ['contentmine', 'term', 'name', 'wikidata'],
     tableData: data,
     options: {
       templates: {
