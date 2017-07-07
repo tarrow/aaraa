@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <title>title</title>
+    <meta charset="utf-8">
+    <title>aaraaapp</title>
   </head>
   <body>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <div id="app">
-	    <v-client-table
-            :data="tableData"
-	        :columns="columns"
-            :options="options"
-	    ></v-client-table>
+      <h2>aaraa - ContentMine Dictionaries Management</h2>
+      <v-client-table  v-if="loaded" :data="tableData" :columns="columns" :options="options"></v-client-table>
     </div>
-    <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+    <!-- built files will be auto injected -->
   </body>
 </html>
