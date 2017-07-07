@@ -7,7 +7,15 @@
   <body>
     <div id="app">
       <h2>aaraa - ContentMine Dictionaries Management</h2>
-      <v-client-table  v-if="loaded" :data="tableData" :columns="columns" :options="options"></v-client-table>
+      <div class="panel" v-if="loaded">
+        <div class="panel-body">
+        <h3>Load a dictionary</h3>
+      <button class="btn btn-default" v-for="dict in dicts" @click="dictLoad(dict)">{{dict.name}}</button>
+        </div>
+      </div>
+      <p>Filter by prefix</p>
+      <button class="btn btn-default" v-for="prefix in prefixes" @click="prefixFilter(prefix)">{{prefix}}</button>
+      <v-client-table :data="tableData" :columns="columns" :options="options"></v-client-table>
     </div>
     <!-- built files will be auto injected -->
   </body>
