@@ -1,0 +1,20 @@
+{
+  "id": "CM.foo",
+  "entries": [
+    {
+      "identifiers": {
+        "contentmine": "CM.foo0",
+        "wikidata": "Q12345"
+      },
+      "term": "BAR",
+      "name": "BAR"
+    },
+    {
+      "identifiers": {
+        "contentmine": "CM.foo1"
+      },
+      "term": "BAZ",
+      "name": "BAZ"
+    }
+  ]
+}
