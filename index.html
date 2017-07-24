@@ -17,6 +17,8 @@
       <button class="btn btn-default" v-for="prefix in prefixes" @click="prefixFilter(prefix)">{{prefix}}</button>
       <button class="btn btn-danger" @click="prefixFilter('')">Clear</button>
       <v-client-table :data="tableData" :columns="columns" :options="options"></v-client-table>
+      <button class="btn" @click="startDownload">Prepare Download</button>
+      <a v-if="downloadContent" :href="downloadContent" download="dictionary.json">Download</a>
     </div>
     <!-- built files will be auto injected -->
   </body>

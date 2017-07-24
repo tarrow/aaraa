@@ -1,18 +1,23 @@
 import serialize from '../../../src/lib/serialize.js'
 import chai from 'chai'
-var flat = require('../files/flat.json')
-var dict = require('../files/dict.json')
+import _ from 'lodash'
+
+var flat = Object.freeze(require('../files/flat.json'))
+var dict = Object.freeze(require('../files/dict.json'))
+var cloneDict = _.clone(dict, true)
+// console.log(cloneDict)
 chai.config.includeStack = true
 var assert = chai.assert
 
 describe('serialiser', () => {
   it('should convert dictionaries to flat form', () => {
     var newFlat = serialize.dictToDisplay(dict)
-    console.log(newFlat)
-    assert.deepEqual(newFlat, flat)
+    assert.deepEqual(newFlat.display, flat)
   })
   it('should convert flat form back to dictionaries', () => {
-    var newDict = serialize.displayToDict(flat)
-    assert.deepEqual(newDict, dict)
+    var newDict = serialize.displayToDict(flat, {id: 'CM.foo'})
+    assert.deepEqual(newDict, cloneDict)
+    console.log('asdfasdfasdfasdfasd')
+    console.log(cloneDict)
   })
 })

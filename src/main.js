@@ -5,18 +5,18 @@ import {ClientTable, Event} from 'vue-tables-2'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios'
 import _ from 'lodash'
+import serialize from './lib/serialize'
 
 Vue.config.productionTip = false
 
 var data = []
+var metadata = {}
 var getAndLoadDict = function (url) {
   axios.get(url).then((response) => {
-    response.data.entries.map((x) => {
-      x.contentmine = x.identifiers.contentmine
-      x.wikidata = x.identifiers.wikidata
-      data.push(x)
-    })
-    // data.push(response.data.entries[0])
+    var displayData = serialize.dictToDisplay(response.data)
+    data.push.apply(data, displayData.display)
+    metadata = displayData.metadata
+    console.log(metadata)
   })
 }
 
@@ -35,6 +35,7 @@ Vue.use(ClientTable)
 new Vue({
   el: '#app',
   data: {
+    downloadContent: null,
     showDictSelector: () => {
       return true
     },
@@ -66,6 +67,9 @@ new Vue({
     },
     prefixFilter (prefix) {
       Event.$emit('vue-tables.filter::prefix', prefix)
+    },
+    startDownload () {
+      this.downloadContent = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(serialize.displayToDict(this.tableData, 'foo')))
     }
   }
 })
