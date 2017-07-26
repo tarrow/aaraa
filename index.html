@@ -19,6 +19,8 @@
       <v-client-table :data="tableData" :columns="columns" :options="options"></v-client-table>
       <button class="btn" @click="startDownload">Prepare Download</button>
       <a v-if="downloadContent" :href="downloadContent" download="dictionary.json">Download</a>
+      <button id="show-modal" @click="showModal = true">Add by SPARQL</button>
+      <modal v-if="showModal" @close="showModal = false">
     </div>
     <!-- built files will be auto injected -->
   </body>

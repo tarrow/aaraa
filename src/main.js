@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios'
 import _ from 'lodash'
 import serialize from './lib/serialize'
+import Modal from './components/Modal'
 
 Vue.config.productionTip = false
 
@@ -16,8 +17,30 @@ var getAndLoadDict = function (url) {
     var displayData = serialize.dictToDisplay(response.data)
     data.push.apply(data, displayData.display)
     metadata = displayData.metadata
-    console.log(metadata)
   })
+}
+
+var addEntry = function (entry) {
+  var term = _.get(entry, 'wikidata.labels.en.value')
+  if (!(term === undefined)) {
+    data.push({
+      wikidata: entry.text,
+      contentmine: getNextID(),
+      name: term,
+      term
+    })
+  }
+}
+
+var getNextID = function () {
+  var ids = data.map((row) => {
+    return parseInt(row.contentmine.match(/(\d+)$/)[0])
+  })
+  var max = _.max(ids)
+  if (max === undefined) max = -1
+  console.log(max)
+  var newid = parseInt(max) + 1
+  return 'CM.foo' + newid
 }
 
 Vue.component('wikidata', {
@@ -30,11 +53,14 @@ Vue.component('wikidata', {
   }
 })
 
+Vue.component('modal', Modal)
+
 Vue.use(ClientTable)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   data: {
+    showModal: false,
     downloadContent: null,
     showDictSelector: () => {
       return true
@@ -69,7 +95,8 @@ new Vue({
       Event.$emit('vue-tables.filter::prefix', prefix)
     },
     startDownload () {
-      this.downloadContent = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(serialize.displayToDict(this.tableData, 'foo')))
+      this.downloadContent = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(serialize.displayToDict(this.tableData, metadata.id)))
     }
   }
 })
+.$on('newentity', addEntry)
