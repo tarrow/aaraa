@@ -11,16 +11,21 @@
         <div class="panel-body">
           <h3>Load a dictionary</h3>
           <button class="btn btn-default" v-for="dict in dicts" @click="dictLoad(dict)">{{dict.name}}</button>
+          <h3>Or Create New</h3>
+          <input v-model="metadata.id" placeholder="Dictionary name (no spaces, lowercase)">
+          <button class="btn btn-primary" @click="newDict()">Create New</button>
         </div>
       </div>
-      <p>Filter by prefix</p>
-      <button class="btn btn-default" v-for="prefix in prefixes" @click="prefixFilter(prefix)">{{prefix}}</button>
-      <button class="btn btn-danger" @click="prefixFilter('')">Clear</button>
-      <v-client-table :data="tableData" :columns="columns" :options="options"></v-client-table>
-      <button class="btn" @click="startDownload">Prepare Download</button>
-      <a v-if="downloadContent" :href="downloadContent" download="dictionary.json">Download</a>
-      <button id="show-modal" @click="showModal = true">Add by SPARQL</button>
-      <modal v-if="showModal" @close="showModal = false">
+      <div v-if="showTable">
+        <p>Filter by prefix</p>
+        <button class="btn btn-default" v-for="prefix in prefixes" @click="prefixFilter(prefix)">{{prefix}}</button>
+        <button class="btn btn-danger" @click="prefixFilter('')">Clear</button>
+        <v-client-table :data="tableData" :columns="columns" :options="options"></v-client-table>
+        <button class="btn" @click="startDownload">Prepare Download</button>
+        <a v-if="downloadContent" :href="downloadContent" download="dictionary.json">Download</a>
+        <button class="btn" id="show-modal" @click="showModal = true">Add to Dictionary</button>
+        <modal v-if="showModal" @close="showModal = false">
+      </div>
     </div>
     <!-- built files will be auto injected -->
   </body>

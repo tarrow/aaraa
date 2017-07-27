@@ -16,7 +16,7 @@ var getAndLoadDict = function (url) {
   axios.get(url).then((response) => {
     var displayData = serialize.dictToDisplay(response.data)
     data.push.apply(data, displayData.display)
-    metadata = displayData.metadata
+    metadata.id = displayData.metadata.id
   })
 }
 
@@ -38,9 +38,8 @@ var getNextID = function () {
   })
   var max = _.max(ids)
   if (max === undefined) max = -1
-  console.log(max)
   var newid = parseInt(max) + 1
-  return 'CM.foo' + newid
+  return 'CM.' + metadata.id + newid
 }
 
 Vue.component('wikidata', {
@@ -65,8 +64,12 @@ new Vue({
     showDictSelector: () => {
       return true
     },
+    showTable: () => {
+      return false
+    },
     columns: ['contentmine', 'term', 'name', 'wikidata'],
     tableData: data,
+    metadata: metadata,
     options: {
       templates: {
         wikidata: 'wikidata'
@@ -90,12 +93,17 @@ new Vue({
     dictLoad (dict) {
       getAndLoadDict(dict.url)
       this.showDictSelector = false
+      this.showTable = true
     },
     prefixFilter (prefix) {
       Event.$emit('vue-tables.filter::prefix', prefix)
     },
     startDownload () {
-      this.downloadContent = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(serialize.displayToDict(this.tableData, metadata.id)))
+      this.downloadContent = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(serialize.displayToDict(this.tableData, this.metadata.id)))
+    },
+    newDict () {
+      this.showDictSelector = false
+      this.showTable = true
     }
   }
 })

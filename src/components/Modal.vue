@@ -17,6 +17,10 @@
                   <textarea style="height: 100%;" name="sparql_query" id="sparql_query" placeholder="Paste your query here where the ?item parameter returns all the items you want in the dictionary" v-model="queryString"></textarea>
                   <button class="btn" type="submit">Run Query</button>
               </form>
+              <form @submit.prevent="doPagePile">
+                <input v-model="pagePileID" placeholder="PagePile ID">
+                <button class="btn" type="submit">Run PagePile</button>
+              </form>
             </slot>
           </div>
 
@@ -36,6 +40,7 @@
 import axios from 'axios'
 import wdk from 'wikidata-sdk'
 import _ from 'lodash'
+import jsonp from 'jsonp'
 
 export default {
   name: 'modal',
@@ -60,11 +65,21 @@ export default {
           this.$parent.$emit('newentity', { wikidata: value, text: key })
         })
       })
+    },
+    doPagePile () {
+      jsonp(`https://tools.wmflabs.org/pagepile/api.php?id=${this.pagePileID}&action=get_data&doit&format=json`, null, function (err, data) {
+        if (err) {
+          console.error(err.message)
+        } else {
+          console.log(data.pages)
+        }
+      })
     }
   },
   data: function () {
     return {
-      queryString: undefined
+      queryString: undefined,
+      pagePileID: undefined
     }
   }
 }
