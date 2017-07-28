@@ -61,12 +61,8 @@ new Vue({
   data: {
     showModal: false,
     downloadContent: null,
-    showDictSelector: () => {
-      return true
-    },
-    showTable: () => {
-      return false
-    },
+    showDictSelector: true,
+    showTable: false,
     columns: ['contentmine', 'term', 'name', 'wikidata'],
     tableData: data,
     metadata: metadata,
