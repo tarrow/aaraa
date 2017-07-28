@@ -22,7 +22,7 @@
         <button class="btn btn-danger" @click="prefixFilter('')">Clear</button>
         <v-client-table :data="tableData" :columns="columns" :options="options"></v-client-table>
         <button class="btn" @click="startDownload">Prepare Download</button>
-        <a v-if="downloadContent" :href="downloadContent" download="dictionary.json">Download</a>
+        <a v-if="downloadContent" :href="downloadContent" :download="metadata.id + '.json'">Download</a>
         <button class="btn" id="show-modal" @click="showModal = true">Add to Dictionary</button>
         <modal v-if="showModal" @close="showModal = false">
       </div>

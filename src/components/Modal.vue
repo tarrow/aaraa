@@ -58,6 +58,7 @@ export default {
           this.$parent.$emit('newentity', { wikidata: value, text: key })
         })
       })
+      this.$emit('close')
     },
     doSparqlQuery () {
       // Snippet inspired by wikidata-sdk https://github.com/maxlath/wikidata-sdk/blob/master/lib/utils/utils.js
