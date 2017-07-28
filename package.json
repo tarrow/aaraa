@@ -14,6 +14,8 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "axios": "^0.16.2",
+    "bootstrap": "^3.3.7",
     "jsonp": "^0.2.1",
     "lodash": "^4.17.4",
     "vue": "^2.3.3",

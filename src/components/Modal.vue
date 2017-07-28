@@ -45,17 +45,10 @@ import jsonp from 'jsonp'
 export default {
   name: 'modal',
   methods: {
-    doSparqlQuery () {
-      // Snippet inspired by wikidata-sdk https://github.com/maxlath/wikidata-sdk/blob/master/lib/utils/utils.js
-      const encodeCharacter = (c) => '%' + c.charCodeAt(0).toString(16)
-      const escapedQueryString = encodeURIComponent(this.queryString).replace(/[!'()*]/g, encodeCharacter)
-      axios.get(`https://query.wikidata.org/sparql?format=json&query=${escapedQueryString}`)
-      .then((response) => {
-        var urls = wdk.getManyEntities(wdk.simplifySparqlResults(response.data))
-        var downloadPromises = urls.map((url) => { return axios.get(url) })
-        return Promise.resolve(downloadPromises)
-      })
-      .then(axios.all)
+    emitNewEntries (wids) {
+      var urls = wdk.getManyEntities(wids)
+      var downloadPromises = urls.map((url) => { return axios.get(url) })
+      axios.all(downloadPromises)
       .then((responses) => {
         var entities = {}
         responses.map((response) => {
@@ -66,12 +59,24 @@ export default {
         })
       })
     },
+    doSparqlQuery () {
+      // Snippet inspired by wikidata-sdk https://github.com/maxlath/wikidata-sdk/blob/master/lib/utils/utils.js
+      const encodeCharacter = (c) => '%' + c.charCodeAt(0).toString(16)
+      const escapedQueryString = encodeURIComponent(this.queryString).replace(/[!'()*]/g, encodeCharacter)
+      axios.get(`https://query.wikidata.org/sparql?format=json&query=${escapedQueryString}`)
+      .then((response) => {
+        var wids = wdk.simplifySparqlResults(response.data)
+        return Promise.resolve(wids)
+      })
+      .then(this.emitNewEntries)
+    },
     doPagePile () {
+      var me = this
       jsonp(`https://tools.wmflabs.org/pagepile/api.php?id=${this.pagePileID}&action=get_data&doit&format=json`, null, function (err, data) {
         if (err) {
           console.error(err.message)
         } else {
-          console.log(data.pages)
+          me.emitNewEntries(data.pages)
         }
       })
     }
