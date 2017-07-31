@@ -1,19 +1,17 @@
-// import _ from 'lodash'
+import _ from 'lodash'
 
 // transfrom from CM dictionary to flat format for display
 var dictToDisplay = function (dict) {
-  var display = []
   var metadata = {
     id: dict.id
   }
-  dict.entries.map((x) => {
-    x.contentmine = x.identifiers.contentmine
+  var display = dict.entries.map((x) => {
+    var y = _.cloneDeep(_.omit(x, 'identifiers'))
+    y.contentmine = x.identifiers.contentmine
     if (!(x.identifiers.wikidata === undefined)) {
-      x.wikidata = x.identifiers.wikidata
+      y.wikidata = x.identifiers.wikidata
     }
-    x.identifiers = null
-    delete x.identifiers
-    display.push(x)
+    return y
   })
   return {display, metadata}
 }
@@ -22,18 +20,14 @@ var dictToDisplay = function (dict) {
 var displayToDict = function (display, metadata) {
   var dict = {}
   dict.id = metadata.id
-  dict.entries = []
-  display.map((x) => {
-    x.identifiers = {}
-    x.identifiers.contentmine = x.contentmine
+  dict.entries = display.map((x) => {
+    var y = _.cloneDeep(_.omit(x, ['wikidata', 'contentmine']))
+    y.identifiers = {}
+    y.identifiers.contentmine = x.contentmine
     if (!(x.wikidata === undefined)) {
-      x.identifiers.wikidata = x.wikidata
+      y.identifiers.wikidata = x.wikidata
     }
-    x.contentmine = null
-    x.wikidata = null
-    delete x.contentmine
-    delete x.wikidata
-    dict.entries.push(x)
+    return y
   })
   return dict
 }
@@ -43,4 +37,4 @@ var serialize = {
   dictToDisplay
 }
 
-module.exports = serialize
+export default serialize
