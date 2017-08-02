@@ -11,7 +11,7 @@ import Modal from './components/Modal'
 Vue.config.productionTip = false
 
 var data = []
-var metadata = {}
+var metadata = { log: [] }
 var getAndLoadDict = function (url) {
   axios.get(url).then((response) => {
     var displayData = serialize.dictToDisplay(response.data)
@@ -30,6 +30,22 @@ var addEntry = function (entry) {
       term
     })
   }
+}
+
+var logQuery = function (queryString) {
+  metadata.log.push({
+    type: 'wdqs',
+    query: queryString,
+    time: Date.now()
+  })
+}
+
+var logPagePile = function (PagePileID) {
+  metadata.log.push({
+    type: 'pagepile',
+    id: PagePileID,
+    time: Date.now()
+  })
 }
 
 var getNextID = function () {
@@ -104,3 +120,5 @@ new Vue({
   }
 })
 .$on('newentity', addEntry)
+.$on('updateQuery', logQuery)
+.$on('updatePagePile', logPagePile)

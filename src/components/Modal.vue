@@ -48,7 +48,7 @@ export default {
     emitNewEntries (wids) {
       var urls = wdk.getManyEntities(wids)
       var downloadPromises = urls.map((url) => { return axios.get(url) })
-      axios.all(downloadPromises)
+      return axios.all(downloadPromises)
       .then((responses) => {
         var entities = {}
         responses.map((response) => {
@@ -57,19 +57,21 @@ export default {
         _.forEach(entities, (value, key) => {
           this.$parent.$emit('newentity', { wikidata: value, text: key })
         })
+        this.$emit('close')
       })
-      this.$emit('close')
     },
     doSparqlQuery () {
       // Snippet inspired by wikidata-sdk https://github.com/maxlath/wikidata-sdk/blob/master/lib/utils/utils.js
       const encodeCharacter = (c) => '%' + c.charCodeAt(0).toString(16)
       const escapedQueryString = encodeURIComponent(this.queryString).replace(/[!'()*]/g, encodeCharacter)
+      var me = this
       axios.get(`https://query.wikidata.org/sparql?format=json&query=${escapedQueryString}`)
       .then((response) => {
         var wids = wdk.simplifySparqlResults(response.data)
         return Promise.resolve(wids)
       })
       .then(this.emitNewEntries)
+      .then(this.$parent.$emit('updateQuery', me.queryString))
     },
     doPagePile () {
       var me = this
@@ -78,6 +80,7 @@ export default {
           console.error(err.message)
         } else {
           me.emitNewEntries(data.pages)
+          me.$parent.$emit('updatePagePile', me.pagePileID)
         }
       })
     }
