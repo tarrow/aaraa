@@ -9,8 +9,12 @@
       <h2>aaraa - ContentMine Dictionaries Management</h2>
       <div class="panel" v-if="showDictSelector">
         <div class="panel-body">
-          <h3>Load a dictionary</h3>
+          <h3>Load a dictionary from the ContentMine Repository</h3>
           <button class="btn btn-default" v-for="dict in dicts" @click="dictLoad(dict)">{{dict.name}}</button>
+          <form>
+            <h3>Upload a Dictionary from Your Computer</h3>
+            <input type="file" @change="loadDictionary">
+          </form>
           <h3>Or Create New</h3>
           <input v-model="metadata.id" placeholder="Dictionary name (no spaces, lowercase)">
           <button class="btn btn-primary" @click="newDict()">Create New</button>

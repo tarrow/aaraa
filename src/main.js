@@ -15,9 +15,13 @@ var metadata = { log: [] }
 var getAndLoadDict = function (url) {
   axios.get(url).then((response) => {
     var displayData = serialize.dictToDisplay(response.data)
-    data.push.apply(data, displayData.display)
-    metadata.id = displayData.metadata.id
+    loadDict(displayData)
   })
+}
+
+var loadDict = function (displayData) {
+  data.push.apply(data, displayData.display)
+  metadata = _.cloneDeep(displayData.metadata)
 }
 
 var addEntry = function (entry) {
@@ -116,6 +120,17 @@ new Vue({
     newDict () {
       this.showDictSelector = false
       this.showTable = true
+    },
+    loadDictionary (e) {
+      var fReader = new window.FileReader()
+      var self = this
+      fReader.onload = function (event) {
+        var displayData = serialize.dictToDisplay(JSON.parse(event.target.result))
+        loadDict(displayData)
+        self.showDictSelector = false
+        self.showTable = true
+      }
+      fReader.readAsText(e.target.files[0])
     }
   }
 })
