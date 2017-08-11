@@ -115,7 +115,7 @@ new Vue({
       Event.$emit('vue-tables.filter::prefix', prefix)
     },
     startDownload () {
-      this.downloadContent = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(serialize.displayToDict(this.tableData, this.metadata)))
+      this.downloadContent = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(serialize.displayToDict(this.tableData, this.metadata), null, 4))
     },
     newDict () {
       this.showDictSelector = false
