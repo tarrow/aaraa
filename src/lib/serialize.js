@@ -20,6 +20,7 @@ var dictToDisplay = function (dict) {
 var displayToDict = function (display, metadata) {
   var dict = {}
   dict.id = metadata.id
+  dict.log = metadata.log
   dict.entries = display.map((x) => {
     var y = _.cloneDeep(_.omit(x, ['wikidata', 'contentmine']))
     y.identifiers = {}
